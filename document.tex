@@ -1,4 +1,4 @@
-\documentclass[10pt]{•}\documentclass{report}
+\documentclass{report}
 \usepackage[T1]{fontenc}
 \usepackage{parskip}
 \usepackage{graphicx}
@@ -27,17 +27,17 @@ Next, let's create an Angular project using the newly installed CLI. The name of
 
 \texttt{ng new booklibrary --prefix bk --defaults --standalone}
 
-We have invoked the \verb|new| command of the CLI that takes care of creating an Angular project! After a few moments of entering those seemingly magic incantations, if everything goes well, we should be greeted by the message: 'Successfully initialized git.' and should see a new folder with the name \textsl{booklibrary} created. We are good to go! \verb|cd| into the folder and enter:
+We have invoked the \texttt{new} command of the CLI that takes care of creating an Angular project! After a few moments of entering those seemingly magic incantations, if everything goes well, we should be greeted by the message: 'Successfully initialized git.' and should see a new folder with the name \textsl{booklibrary} created. We are good to go! \texttt{cd} into the folder and enter:
 
 \texttt{ng serve}
 
 After a few moments, We should see the message: \textbf{\texttt{Angular Live Development Server is listening on localhost:4200}}. Open \url{http://localhost:4200} in a browser and, lo! we should see our very first web app up and running!
 
-What magic did the CLI perform to bring up the web app? Let's investigate starting from the \textsl{booklibrary} folder that was created by the \verb|ng new| command! There should be files in that folder as shown in the figure below:
+What magic did the CLI perform to bring up the web app? Let's investigate starting from the \textsl{booklibrary} folder that was created by the \texttt{ng new} command! There should be files in that folder as shown in the figure below:
 
 \includegraphics[scale=0.5]{project-structure}
 
-These files were created by the \verb|ng new| command and constitute the Angular project. Among the files there's a \textsl{package.json} file that defines the \textsl{npm packages} that the project depends on. The important dependencies are:
+These files were created by the \texttt{ng new} command and constitute the Angular project. Among the files there's a \textsl{package.json} file that defines the \textsl{npm packages} that the project depends on. The important dependencies are:
 
 \begin{itemize}
 	\item @angular packages, the main libraries that constitute the Angular framework.
@@ -58,10 +58,10 @@ Enough of seeing the project structure, now, let's delve into the code!
 All the component code resides in the \textsl{src/app} folder. The CLI has created our first Angular component in that folder. The component is named \textsl{AppComponent} and consists of four files:
 
 \begin{itemize}
-	\item app.component.ts - Defines the behavior (functionality) of the component in TypeScript language.
-	\item app.component.spec.ts - Contains Unit tests for the component's functionality coded in TypeScript.
-	\item app.component.html - Defines the content structure in terms of HTML elements contained in the component.
-	\item app.component.css - Defines how the component looks by way of CSS style rules.
+	\item[app.component.ts]Defines the behavior (functionality) of the component in TypeScript language.
+	\item[app.component.spec.ts]Contains Unit tests for the component's functionality coded in TypeScript.
+	\item[app.component.html]Defines the content structure in terms of HTML elements contained in the component.
+	\item[app.component.css]Defines how the component looks by way of CSS style rules.
 \end{itemize}
 
 Looking at \textsl{app.component.ts} we see the following TypeScript code:
@@ -80,9 +80,5 @@ export class AppComponent {
   title = 'booklibrary';
 }
 \end{Verbatim}
-
-Holy Cow! The app itself is a component! This fact is being made known by the use of the \verb|@Component()| decorator. A \textsl{decorator} is so called because of its ability to give additional meaning to, i.e. \textsl{decorate}, TypeScript language elements. Here we use the \verb|@Component| decorator to convey that the \verb|AppComponent| is an Angular component and not just a \textsl{regular} TypeScript class. As we will see in detail further, what makes an Angular component special is that it has an associated view defined in terms of HTML which says what will be displayed when the component is visible in a web page. In the above example, the view (HTML) is in a separate file, \texttt{app.component.html}. This fact is made known by the \verb|templateUrl| key (line 8) of the configuration object that's the argument to \verb|@Component()| decorator which is being \textsl{called} like a function. We also define how the component looks by specifying the CSS style rules in a file whose path is specified in the \verb|styleUrls| key of the same configuration object argument.
-
-How do we put the component to work in a web page? Every Angular component is an abstraction of content with relevant behavior and appearance. This is achieved by the use of custom HTML tags for defining HTML elements that hold the content, JavaScript for specifying the behavior and CSS style rules for the appearance of those elements. One level up the app folder, the \texttt{index.html} file contains opening and closing custom tag \verb|bk-root| inside the \verb|body| tag. This custom tag's name, \verb|bk-root|, is the value for \verb|selector| key of \verb|AppComponent|'s \verb|@Component()| decorator. In general, the \verb|selector| key specifies custom tag name of the HTML element created by the component. Yay!
 
 \end{document}
