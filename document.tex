@@ -8,6 +8,8 @@
 \graphicspath{{./images/}}
 \begin{document}
 	\chapter{Introduction}
+	This first chapter, we will breeze through the topics of Angular, componentization, single page web app and others that we will delve into in detail in rest of the book.
+	
 	\section{Just what is Angular?}
 Angular is a framework for programming the web using components. The web componentization movement started a little while ago. Now, there are many serious players in this field, e.g., Angular, React, Svelte, Vue, just to name a few. The native web technologies (HTML, CSS, and JavaScript) have also started out in this direction by introducing the Web Components \href{https://www.webcomponents.org/specs}{specification}.
 
@@ -81,8 +83,56 @@ export class AppComponent {
 }
 \end{Verbatim}
 
-Holy Cow! The app itself is a component! This fact is being made known by the use of the \verb|@Component()| decorator. A \textsl{decorator} is so called because of its ability to give additional meaning to, i.e. \textsl{decorate}, TypeScript language elements. Here we use the \verb|@Component| decorator to convey that the \verb|AppComponent| is an Angular component and not just a \textsl{regular} TypeScript class. As we will see in detail further, what makes an Angular component special is that it has an associated view defined in terms of HTML which says what will be displayed when the component is visible in a web page. In the above example, the view (HTML) is in a separate file, \texttt{app.component.html}. This fact is made known by the \verb|templateUrl| key (line 8) of the configuration object that's the argument to \verb|@Component()| decorator which is being \textsl{called} like a function. We also define how the component looks by specifying the CSS style rules in a file whose path is specified in the \verb|styleUrls| key of the same configuration object argument.
+Holy Cow! The app itself is a component! This fact is being made known by the use of the \verb|@Component()| decorator. A \textsl{decorator} is so called because of its ability to give additional meaning to, i.e. \textsl{decorate}, TypeScript language elements. Here we use the \verb|@Component| decorator to convey that the \verb|AppComponent| is an Angular component and not just a \textsl{regular} TypeScript class. As we will see in detail further, what makes an Angular component special is that it has an associated view defined in terms of HTML which says what will be displayed when the component is visible in a web page. In the above example, the view (HTML) is in a separate file, \verb|app.component.html|. This fact is made known by the \verb|templateUrl| key (line 8) of the configuration object that's the argument to \verb|@Component()| decorator which is being \textsl{called} like a function. We also define how the component looks by specifying the CSS style rules in a file whose path is specified in the \verb|styleUrls| key of the same configuration object argument.
 
-How do we put the component to work in a web page? Every Angular component is an abstraction of content with relevant behavior and appearance. This is achieved by the use of custom HTML tags for defining HTML elements that hold the content, JavaScript for specifying the behavior and CSS style rules for the appearance of those elements. One level up the app folder, the \texttt{index.html} file contains opening and closing custom tag \verb|bk-root| inside the \verb|body| tag. This custom tag's name, \verb|bk-root|, is the value for \verb|selector| key of \verb|AppComponent|'s \verb|@Component()| decorator. In general, the \verb|selector| key specifies custom tag name of the HTML element created by the component. Yay!
+How do we see our component at work in a web page? To create the component in a web page, we use custom tags as given by the \verb|selector| key of the \verb|@Component()| decorator of \verb|AppComponent|. The custom tags create custom elements whose HTML content is specified by the file pointed to by the \verb|templateUrl| and whose appearance is defined by the CSS in file(s) given by \verb|styleUrls| of the \verb|@Component()|. Thus, the custom tag \verb|bk-root| is used in \verb|index.html| file of src folder to create the AppComponent element.
+
+\section{Naming conventions}
+Angular CLI names component classes with names ending with \texttt{Component}. The classes are defined in files whose names end with \verb|component.ts|. To avoid name clashes, names of custom tags created by Angular are prefixed with some combination of letters. The \verb|--prefix bk| that we used in the \verb|ng new| command specifies that throughout the application, Angular must prefix custom tags with the letters \verb|bk|.
+
+The \verb|imports| key of \verb|@Component()| decorator specifies that Angular must look into its CommonModule for components, directives, pipes and other functionality that's referred to in the template of the component. This is how we can reuse functionality implemented elsewhere. For example, if we have used a custom tag \verb|bk-books-collected| which is defined in the BooksCollected component, we need to include this component in the list of \verb|imports|.
+
+The \verb|standalone| key of \verb|@Component()| decorator specifies that the component doesn't belong to any specific module.
+
+\section{Bootstrapping the application}
+Angular CLI automatically generates the required logic to start the app in a file called \verb|main.ts|, inside the \verb|src| folder.
+
+\begin{Verbatim}[numbers=left]
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { AppComponent } from './app/app.component';
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+\end{Verbatim}
+
+But, the script needs to run from a web page right? Yes, right! The \verb|index.html| file in \verb|src| folder is the web page that represents the App. How can we be so sure? The \verb|bk-root| custom tag in the file creates the AppComponent.
+
+\chapter{Templating}
+In this chapter we will learn how to make our components display dynamic content on a web page. This way, e.g., we can greet our library members by their name whenever they log in to our application!
+
+\section{Interpolation}
+For the purpose of explaining the concept, we will resort to using inline templates in our components. We need to replace the \verb|templateUrl| with \verb|template| key in our \verb|@Component| decorator as shown below.
+ 
+\begin{Verbatim}[numbers=left]
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'bk-root',
+  standalone: true,
+  template: "<h1>Welcome to Greenie's Book Library</h1>",
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'booklibrary';
+}
+\end{Verbatim}
+
+Two things to note from the example above:
+\begin{itemize}
+\item We are not importing \verb|CommonModule| anymore as we are not using any components, directives or pipes from the \verb|CommonModule| in our simple example.
+\item We are using inline template and kept the HTML content of our component in the \verb|template| key of \verb|@Component()| decorator. The template is a string of HTML code demarced with the double quotes. We could have used single quotes to demarc the code but would have encountered a problem as there's a single quote as part of the HTML code (\textsl{Greenie's}).
+\end{itemize}
+
+After the above code changes we must be able to see a welcome message: Welcome to Greenie's Book Library!
 
 \end{document}
