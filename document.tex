@@ -234,7 +234,65 @@ export class AppComponent {
 
 Angular makes it easy to handle \href{https://developer.mozilla.org/en-US/docs/Web/Events#event_listing}{DOM events} by allowing us to specify in the template of a component the TypeScript code that should execute in response to an event. Again, as you may guess, there's special syntax to do this. The Angular parser looks for special attributes on HTML tags in the template of a component. These attributes are special in that they are not standard HTML attributes. They are enclosed within parantheses and are named after the name of a DOM event, e.g., \verb|(click)| or \verb|(keydown)|. The value of the attribute is evaluated as TypeScript code that gets executed in the context of the component's class when the event occurs. Note that just like regular HTML attribute values the code must be enclosed in double quotes. In the component template above, you can identify the code \verb|turnGreen()| inside the double quotes as a method call. The method is defined in the component's class. Inside the method definition, we have code to change the user's name to "\texttt{Mr. Green}". The method is called when the user clicks on the button.
 
+\section{The event object}
+The browser's DOM model allows the programmer to access the event object in an event handler as an argument. Now, you may ask whether this is possible when handling DOM events in the way shown in the previous section. As we saw there, Angular allows us to execute code in response to DOM events using special syntax in the component's template. Now, it will be seen that Angular also allows us to access the event object right from inside that code! Angular makes available a special variable named \verb|$event| that gives access to that event object. In the above example if we want to access the event object in the \verb|turnGreen| method, we need to pass the \verb|$event| variable as an argument when calling the method from the template. The code example below illustrates this point.
+
+\begin{Verbatim}[label=2.1.5]
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'bk-root',
+  standalone: true,
+  template: `<h1 [textContent]="'Hi, ' + user.name + '!'"></h1>
+  <h2>Welcome to Greenie's Book Library</h2>
+  <button (click)="turnGreen($event)">Turn me green!</button>`,
+})
+export class AppComponent {
+  user = { name: "Mr. Red" };
+
+  turnGreen(ev: MouseEvent) {
+    this.user.name = "Mr. Green";
+    console.log(`You clicked ${ev.offsetX} pixels away from the left!`);
+  }
+}
+\end{Verbatim}
+
+The component's \verb|turnGreen| method, now expects an argument that's of the type \verb|MouseEvent|. This is exactly the type of event object that's sent by the \verb|click| \href{https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event}{event}. Note that as per MDN, the event type is \verb|PointerEvent|. But, defining the event argument to be of that type causes compilation error. When I declared the argument to be of type \verb|MouseEvent| \href{https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent}{interface}, the compilation error went away. In fact, the TypeScript type information files that are available in the Angular build system\footnote{In my system, this type information is found in \texttt{/usr/share/code/resources/app/extensions/node\_modules/typescript/lib/lib.dom.d.ts} file} shows that is the correct type of the event object which is associated with the click event. When we are using Visual Studio Code IDE, the intellisense shows type information tips. In case you don't know the specific type of an event object, you can always use the \textsl{catch-all} type \verb|any|. Note that Angular doesn't add anything new to the event object - it's the same old type of object that we get to work with when we write scripts in environments outside the Angular framework. However, Angular does bring something extra to the table when handling some of the events like, e.g., \verb|keydown|. The code snippets below illustrate how easy Angular makes it to handle \verb|keydown| \href{https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event}{events}.
+
+\verb|<input (keydown.space)="spacePressed()">|
+
+Now, the \verb|spacePressed| method is called whenever the user presses spacebar with focus on the input control. We can even use a combination of keys when specifying the handler for \verb|keydown| event as shown below!
+
+\verb|<input (keydown.alt.space)="spacePressed()">|
+
+\section{Nested property binding}
+Angular brings similar ease of programmability when binding properties. Earlier, we saw how DOM properties can be bound using the bracket (\verb|[]|) syntax. We can also bind nested properties using the same syntax as shown below:
+
+\begin{Verbatim}[label=2.1.6]
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'bk-root',
+  standalone: true,
+  template: `<h1 [style.color]="fontColor">{{'Hi, ' + user.name + '!'}}</h1>
+  <h2>Welcome to Greenie's Book Library</h2>
+  <button (click)="turnGreen($event)">Turn me green!</button>`,
+})
+export class AppComponent {
+  user = { name: "Mr. Red" };
+  fontColor = 'red';
+
+  turnGreen(ev: MouseEvent) {
+    this.user.name = "Mr. Green";
+    this.fontColor = 'green';
+    console.log(`You clicked ${ev.offsetX} pixels away from the left!`);
+  }
+}
+\end{Verbatim}
+
+In the above code snippet, we have bound the \verb|h1| element's \verb|style.color| property to \verb|fontColor| property of the component. When \verb|fontColor| value changes, the \verb|style.color| DOM property is updated too.
+
 \section{Composition}
-It's possible to compose an Angular component using other Angular components. After all, the whole idea of developing components in the first place is to be able to use them as part of other complex components. From the point of JavaScript it has always been possible to compose a class or object with other classes and objects. But, how do we compose a HTML element with other HTML elements? We have already seen the answer to this problem in chapter 1. We just use the proper custom tag (given by the selector key of the \verb|@Component| decorator) in the template of another component. In the example above, suppose we want to show
+It's possible to compose an Angular component using other Angular components. After all, the whole idea of developing components in the first place is to be able to use them as part of other complex components. From the point of JavaScript it has always been possible to compose a class or object with other classes and objects. But, how do we compose a HTML element with other HTML elements? We have already seen the answer to this problem in chapter 1. We just use the proper custom tag (given by the selector key of the \verb|@Component| decorator) in the template of another component. In the example above, suppose we want to show 
 
 \end{document}
